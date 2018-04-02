@@ -1,24 +1,15 @@
 <?php
-function OGReader($url)
-{
-    $html = file_get_contents($url);
-    $tags = explode('<meta property=', $html);
-    $y = 0;
-    for ($i=0; $i < count($tags); $i++) {
-        if (strpos($tags[$i], 'og:') !== false) {
-            $OG[$y] = $tags[$i];
-            $y++;
-        }
-    }
-    for ($i=0; $i < count($OG); $i++) {
-        $list = explode('"', $OG[$i]);
-        $finalData[$i] = array($list[1],$list[3]);
-    }
-    return $finalData;
-}
+ini_set('memory_limit',-1);
+$url = 'http://9gag.com/';
+$tags=array();
 
-$url = 'http://9gag.com';
-$OGs = OGReader($url);
-var_dump($OGs);
+$html= file_get_contents($url);
 
-?>
+
+$html=explode('<meta',$html);
+foreach($html as $m)
+  (trim($k=@explode('"',explode('"og:',$m,2)[1],2)[0])!='' OR trim($k=@explode("'",explode("'og:",$m,2)[1],2)[0])!='')
+    AND trim($tags[$k]=@explode('"',explode('content="',$m,2)[1],2)[0])==''
+     AND $tags[$k]=@explode("'",explode("content='",$m,2)[1],2)[0];
+var_dump($tags);
+exit;
